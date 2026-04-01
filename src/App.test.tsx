@@ -37,7 +37,7 @@ describe('habit tracker dashboard', () => {
     vi.useRealTimers()
   })
 
-  it('opens on today\'s dashboard with the current date and default reminder cues', () => {
+  it('opens on today's dashboard with the current date and default reminder cues', () => {
     render(<App />)
 
     expect(screen.getByText('Calm Wellness Dashboard')).toBeInTheDocument()
@@ -65,9 +65,9 @@ describe('habit tracker dashboard', () => {
 
     render(<App />)
 
-    expect(screen.getByDisplayValue('06:45')).toBeInTheDocument()
-    expect(screen.getByDisplayValue(20)).toBeInTheDocument()
-    expect(screen.getByDisplayValue(8)).toBeInTheDocument()
+    expect(screen.getByLabelText('Wake-up time')).toHaveValue('06:45')
+    expect(screen.getByLabelText('Yoga minutes')).toHaveValue(20)
+    expect(screen.getByLabelText('Sleep hours')).toHaveValue(8)
     expect(within(screen.getByLabelText('Hydration controls')).getByText('8')).toBeInTheDocument()
     expect(screen.getByLabelText('4 of 4 goals completed')).toBeInTheDocument()
     expect(
@@ -82,9 +82,7 @@ describe('habit tracker dashboard', () => {
     fireEvent.change(screen.getByLabelText('Yoga minutes'), { target: { value: '25' } })
 
     const hydrationControls = screen.getByLabelText('Hydration controls')
-    const [decrementButton, incrementButton] = within(hydrationControls).getAllByRole('button')
-
-    expect(decrementButton).toBeInTheDocument()
+    const [, incrementButton] = within(hydrationControls).getAllByRole('button')
 
     for (let count = 0; count < 8; count += 1) {
       fireEvent.click(incrementButton)
@@ -123,7 +121,7 @@ describe('habit tracker dashboard', () => {
     expect(sleepCard).toHaveClass('sleep-tone-green')
   })
 
-  it('resets only today\'s data and preserves earlier history', () => {
+  it('resets only today's data and preserves earlier history', () => {
     setStoredEntries({
       [TODAY_KEY]: {
         wakeUpTime: '06:30',
@@ -143,8 +141,9 @@ describe('habit tracker dashboard', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Reset today' }))
 
-    expect(screen.getByDisplayValue('')).toBeInTheDocument()
-    expect(screen.getByDisplayValue(0)).toBeInTheDocument()
+    expect(screen.getByLabelText('Wake-up time')).toHaveValue('')
+    expect(screen.getByLabelText('Yoga minutes')).toHaveValue(0)
+    expect(screen.getByLabelText('Sleep hours')).toHaveValue(0)
     expect(within(screen.getByLabelText('Hydration controls')).getByText('0')).toBeInTheDocument()
     expect(screen.getByLabelText('0 of 4 goals completed')).toBeInTheDocument()
 
@@ -182,6 +181,6 @@ describe('habit tracker dashboard', () => {
     expect(
       screen.getByText('Up 06:50 · Yoga 25 min · 8/8 glasses · Sleep 8h'),
     ).toBeInTheDocument()
-    expect(screen.getAllByText(/\/4$/)).toHaveLength(7)
+    expect(document.querySelectorAll('.history-card')).toHaveLength(7)
   })
 })
