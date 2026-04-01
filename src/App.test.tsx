@@ -37,7 +37,7 @@ describe('habit tracker dashboard', () => {
     vi.useRealTimers()
   })
 
-  it('opens on today's dashboard with the current date and default reminder cues', () => {
+it("opens on today's dashboard with the current date and default reminder cues", () => {
     render(<App />)
 
     expect(screen.getByText('Calm Wellness Dashboard')).toBeInTheDocument()
@@ -121,7 +121,7 @@ describe('habit tracker dashboard', () => {
     expect(sleepCard).toHaveClass('sleep-tone-green')
   })
 
-  it('resets only today's data and preserves earlier history', () => {
+  it("resets only today's data and preserves earlier history", () => {
     setStoredEntries({
       [TODAY_KEY]: {
         wakeUpTime: '06:30',
